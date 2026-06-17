@@ -2,15 +2,15 @@
 dataset.py — 数据加载（参考接口）
 ==================================
 
-【W2 任务，W1 只需要建空文件。】
+【单元 1.2 任务；单元 1.1 只需建空文件占位。理论见 ../U1.2_min_training_loop/study_guide.md】
 
-W2 时要实现 get_dataloaders：
+单元 1.2 时要实现 get_dataloaders：
   - 返回 (train_loader, val_loader)
   - 训练集 shuffle=True，验证集 shuffle=False
   - batch_size、num_workers 作为参数
 
 数据集：FashionMNIST（torchvision 自带），10 类灰度 28x28。
-归一化：用 transforms.ToTensor() 转成 [0, 1] 浮点即可（W1 不额外做 Normalize）。
+归一化：用 transforms.ToTensor() 转成 [0, 1] 浮点即可（本单元先不额外做 Normalize）。
 
 卡住时查：
   - torchvision.datasets.FashionMNIST 文档
@@ -41,12 +41,12 @@ def get_dataloaders(
       - val_loader 同 shape，shuffle=False
       - labels: (B,) int64
     """
-    # TODO (W2)
+    # TODO (单元 1.2)
     pass
 
 
 # ============================================================
-# 测试代码（W2 用）
+# 测试代码（单元 1.2 用）
 # ============================================================
 
 if __name__ == "__main__":

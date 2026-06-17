@@ -2,9 +2,9 @@
 train.py — 训练主入口（参考接口）
 ==================================
 
-【W2 任务，W1 只需要建空文件占位。W1 不跑 smoke test。】
+【单元 1.2 任务；单元 1.1 只需建空文件占位、不跑 smoke test。理论见 ../U1.2_min_training_loop/study_guide.md】
 
-W2 要实现：
+单元 1.2 要实现：
   1. train_one_epoch(model, loader, criterion, optimizer, device) -> (avg_loss, avg_acc)
   2. evaluate(model, loader, criterion, device) -> (avg_loss, avg_acc)
   3. main() —— 解析 argparse、创建 dataloader / model / optimizer、跑多个 epoch、保存 best
@@ -28,8 +28,8 @@ def train_one_epoch(
     device: torch.device,
 ) -> tuple[float, float]:
     """训练一个 epoch，返回 (平均 loss, 平均 accuracy)。记得 model.train()。"""
-    # TODO (W2)
-    raise NotImplementedError("W2 任务")
+    # TODO (单元 1.2)
+    raise NotImplementedError("单元 1.2 任务")
 
 
 def evaluate(
@@ -39,14 +39,14 @@ def evaluate(
     device: torch.device,
 ) -> tuple[float, float]:
     """验证集评估，返回 (平均 loss, 平均 accuracy)。记得 model.eval() + torch.no_grad()。"""
-    # TODO (W2)
-    raise NotImplementedError("W2 任务")
+    # TODO (单元 1.2)
+    raise NotImplementedError("单元 1.2 任务")
 
 
 def main():
     """解析参数 → set_seed → dataloader → model → criterion/optimizer → 训练循环 → 保存 best。"""
-    # TODO (W2)
-    raise NotImplementedError("W2 任务")
+    # TODO (单元 1.2)
+    raise NotImplementedError("单元 1.2 任务")
 
 
 if __name__ == "__main__":

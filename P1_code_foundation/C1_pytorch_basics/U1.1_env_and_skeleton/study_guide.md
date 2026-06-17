@@ -1,17 +1,20 @@
-# M1 W1 学习指南：PyTorch 张量与自动微分
+# 单元 1.1 学习指南：PyTorch 张量与自动微分
 
-## 本周学习路径（v3.1 调整版）
+## 本单元学习路径（v4 进度制 · 按完成度推进，不计时）
+
+> 做完一步、对应自测通过，再进入下一步；不绑定天数/小时。
+> 你有 VLA 微调经验，张量/autograd 这部分若能直接通过文末自测，可跳过讲解、直接做练习。
 
 ```
-Day 1 (2h)  环境配置              --> W1_environment_setup.md
-Day 2 (2h)  shell 基础 + 练习 1-6 --> W1_shell_basics.md
-Day 3 (2h)  张量 Part 1-5         --> tensor_playground.py 前半
-Day 4 (2h)  autograd Part 6-7     --> tensor_playground.py 后半
-Day 5 (2h)  自建 project/ + utils --> project_skeleton/SETUP.md 指引下自建目录，写 utils.py 5 个函数
+步骤 1  环境配置              --> environment_setup.md
+步骤 2  shell 基础 + 练习 1-6 --> shell_basics.md
+步骤 3  张量 Part 1-5         --> tensor_playground.py 前半
+步骤 4  autograd Part 6-7     --> tensor_playground.py 后半
+步骤 5  自建 project/ + utils --> ../project_skeleton/SETUP.md 指引下自建目录，写 utils.py 5 个函数
 ```
 
-**本周不做：** model.py / dataset.py / train.py 的实现 —— 已按 v3.1 原则移到 W2。
-W1 专注于"环境就绪 + shell 熟练 + tensor 练透 + utils 自己写出来"。
+**本单元不做：** model.py / dataset.py / train.py 的实现 —— 按 v4 划分属于**单元 1.2**（训练最小闭环）。
+单元 1.1 专注于"环境就绪 + shell 熟练 + tensor 练透 + utils 自己写出来"。
 
 ---
 
@@ -227,9 +230,9 @@ x[[0, 2, 4]]    # 花式索引，取第 0,2,4 个
 
 ---
 
-## 七、本周核心概念自测
+## 七、本单元核心概念自测
 
-学完本周后，你应该能回答以下问题（不看笔记）：
+学完本单元后，你应该能回答以下问题（不看笔记）：
 
 1. 什么是张量？它和 numpy array 的主要区别是什么？
 2. `requires_grad=True` 意味着什么？

@@ -1,7 +1,7 @@
-# M1 W1 验收清单
+# 单元 1.1 验收清单 / 出关条件
 
-> v3.1 原则：W1 只做"环境与骨架"。model/dataset/train.py 的 smoke test 已从 W1 移到 W2。
-> 本周专注：**环境就绪 + shell 熟练 + tensor 练透 + utils.py 自己写出来**。
+> v4 原则：单元 1.1 只做"环境与骨架"。model/dataset/train.py 的 smoke test 属于单元 1.2。
+> 本单元专注：**环境就绪 + shell 熟练 + tensor 练透 + utils.py 自己写出来**。
 
 ---
 
@@ -17,7 +17,7 @@
 
 ## Shell 基础（新增，必做）
 
-参见 `W1_shell_basics.md`。
+参见 `shell_basics.md`。
 
 - [ ] 通读文档一遍
 - [ ] 练习 1–6 全部完成
@@ -44,20 +44,20 @@
 
 ---
 
-## 项目骨架（W1 只做 utils.py）
+## 项目骨架（单元 1.1 只做 utils.py）
 
-**重点：按 `project_skeleton/SETUP.md` 自己从空目录建文件结构。不要直接改我给的 skeleton —— skeleton 是参考，你要自己写一版。**
+**重点：按 `../project_skeleton/SETUP.md` 自己从空目录建文件结构。不要直接改我给的 skeleton —— skeleton 是参考，你要自己写一版。**
 
-- [ ] 自己建出 `project/` 目录和四个文件 `utils.py / model.py / dataset.py / train.py`（model/dataset/train 本周只留空骨架，W2 再填）
+- [ ] 自己建出 `project/` 目录和四个文件 `utils.py / model.py / dataset.py / train.py`（model/dataset/train 单元 1.1 只留空骨架，单元 1.2 再填）
 - [ ] `utils.py`: 5 个函数全部实现
   - [ ] `set_seed`
   - [ ] `accuracy`
   - [ ] `count_parameters`
   - [ ] `save_checkpoint`
   - [ ] `load_checkpoint`
-- [ ] `python utils.py` 运行后输出 "All 5 tests PASSED!"（使用 `project_skeleton/tests/test_utils.py` 验证）
+- [ ] `python utils.py` 运行后输出 "All 5 tests PASSED!"（测试内联在 `../project_skeleton/utils.py` 底部 `__main__`，复制到你的 `../project/utils.py` 后运行 `python utils.py`；没有单独的 test 文件）
 
-> **注：** `model.py`、`dataset.py`、`train.py` 的实现和 smoke test 已移到 **W2**。本周不做。
+> **注：** `model.py`、`dataset.py`、`train.py` 的实现和 smoke test 已移到**单元 1.2**。本单元不做。
 
 ---
 
@@ -102,7 +102,7 @@
 - 概念自测能流畅回答
 - 能在 tmux 里跑后台任务并用 tail -f 监控
 
-**不在本周做（已移至 W2）：**
+**不在本单元做（已移至单元 1.2）：**
 - model.py 的 SimpleCNN 实现
 - dataset.py 的 get_dataloaders 实现
 - train.py 的 smoke test

@@ -1,4 +1,4 @@
-# M1 W1 环境配置手册
+# 单元 1.1 环境配置手册
 
 ## 1. 创建 Python 虚拟环境
 
@@ -153,20 +153,23 @@ git commit -m "Initial commit: add .gitignore"
 ## 6. 项目目录结构
 
 ```bash
-# 创建本月工作目录（如果你用这份资料，目录已经创建好了）
-cd ~/code/embodied_study/M01_pytorch_basics/
+# 进入本章（章 1）工作目录（如果你用这份资料，目录已经创建好了）
+cd ~/code/embodied_study/P1_code_foundation/C1_pytorch_basics/
 
 # 目录结构如下：
-# M01_pytorch_basics/
-# ├── W1_study_guide.md          # 本周学习指南
-# ├── W1_environment_setup.md    # 本文件
-# ├── W1_checklist.md            # 验收清单
-# ├── tensor_playground.py       # 张量练习
-# └── project_skeleton/          # FashionMNIST 项目骨架
-#     ├── train.py
-#     ├── model.py
-#     ├── dataset.py
-#     └── utils.py
+# C1_pytorch_basics/                     # 章 1（在 P1_code_foundation/ 下）
+# ├── U1.1_env_and_skeleton/             # 单元 1.1（本单元）
+# │   ├── index.md                       # 单元入口（先看这个）
+# │   ├── study_guide.md                 # 张量/autograd 学习指南
+# │   ├── environment_setup.md           # 本文件
+# │   ├── shell_basics.md                # shell 基础
+# │   ├── checklist.md                   # 验收 / 出关
+# │   └── tensor_playground.py           # 张量练习
+# └── project_skeleton/                  # 章级共享 · FashionMNIST 项目骨架
+#     ├── SETUP.md                       # 怎么用骨架
+#     ├── utils.py                       # 单元 1.1 写
+#     └── model.py / dataset.py / train.py   # 单元 1.2 写
+# （你自己建的 project/ 在章目录下，不入库）
 ```
 
 ## 7. 最终验证

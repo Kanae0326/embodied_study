@@ -21,6 +21,7 @@ utils.py — 训练工具函数（参考接口）
 
 import os
 import random
+import tempfile
 import torch
 import torch.nn as nn
 import numpy as np
@@ -107,7 +108,7 @@ if __name__ == "__main__":
     print("\n[4/5] Testing save_checkpoint...")
     model = nn.Linear(10, 5)
     optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
-    test_path = "/tmp/test_ckpt.pth"
+    test_path = os.path.join(tempfile.gettempdir(), "test_ckpt.pth")
     save_checkpoint(model, optimizer, epoch=3, loss=0.456, path=test_path)
     assert os.path.exists(test_path), f"save_checkpoint failed: file not found at {test_path}"
     print(f"  PASSED: checkpoint saved to {test_path}")

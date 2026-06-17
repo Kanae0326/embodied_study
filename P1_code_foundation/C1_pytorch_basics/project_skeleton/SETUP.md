@@ -1,6 +1,6 @@
 # project_skeleton —— 使用方式
 
-> v3.1 计划要求 W1 的交付是**项目骨架 + tensor_playground**。
+> v4 计划中单元 1.1 的交付是**项目骨架 + tensor_playground**。
 > 骨架应该**由你亲手搭起**，而不是直接改我给的文件。
 
 ---
@@ -16,18 +16,18 @@
 
 ---
 
-## 本周你要做的
+## 本单元你要做的
 
 ### 1. 建自己的项目目录
 
 ```bash
-cd ~/code/embodied_study/M01_pytorch_basics/
+cd ~/code/embodied_study/P1_code_foundation/C1_pytorch_basics/
 mkdir -p project/checkpoints
 cd project/
 touch utils.py model.py dataset.py train.py
 ```
 
-这 4 个文件 W1 本周**只需要写 utils.py**。其他 3 个文件先建空的占位，W2 再填。
+这 4 个文件单元 1.1 **只需要写 utils.py**。其他 3 个文件先建空的占位，单元 1.2 再填。
 
 ### 2. 把 skeleton 当作参考，不要当作答案
 
@@ -42,10 +42,10 @@ touch utils.py model.py dataset.py train.py
 
 ```bash
 # 你在 project/utils.py 写好了之后
-cd ~/code/embodied_study/M01_pytorch_basics/project/
-python ../project_skeleton/utils.py  # 这会跑 skeleton 里的测试
+cd ~/code/embodied_study/P1_code_foundation/C1_pytorch_basics/project/
+python ../project_skeleton/utils.py  # 这么跑没用，见下面的说明
 
-# 但 skeleton 测试里 from utils import ... 指的是它自己目录下的空 utils.py，
+# 直接跑 skeleton 的 utils.py 没用：里面 5 个函数都是 pass，测试必然失败；
 # 所以推荐做法：把 skeleton utils.py 底部的 if __name__ == "__main__": 那一整段
 # 复制到你自己的 project/utils.py 底部。然后：
 cd project/
@@ -56,9 +56,9 @@ python utils.py
 
 ---
 
-## 本周文件的 W1 / W2 分工
+## 文件的单元 1.1 / 单元 1.2 分工
 
-| 文件 | W1 做 | W2 做 |
+| 文件 | 单元 1.1 做 | 单元 1.2 做 |
 |---|---|---|
 | `utils.py` | **全部 5 个函数** | 不动 |
 | `model.py` | 只建空文件 + 空 class 占位 | 实现 SimpleCNN |

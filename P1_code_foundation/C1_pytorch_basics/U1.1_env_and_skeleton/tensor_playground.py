@@ -1,5 +1,5 @@
 """
-M1 W1 | 张量练习场 (Tensor Playground)
+单元 1.1 | 张量练习场 (Tensor Playground)
 ======================================
 
 使用方法：
@@ -18,7 +18,7 @@ M1 W1 | 张量练习场 (Tensor Playground)
 import torch
 
 print("=" * 60)
-print("M1 W1 | Tensor Playground")
+print("单元 1.1 | Tensor Playground")
 print("=" * 60)
 
 

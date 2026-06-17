@@ -2,9 +2,9 @@
 model.py — 模型定义（参考接口）
 ================================
 
-【W2 任务，W1 只需要建空文件。】
+【单元 1.2 任务；单元 1.1 只需建空文件占位。理论见 ../U1.2_min_training_loop/study_guide.md】
 
-W2 时，你需要实现一个简单 CNN 用于 FashionMNIST 分类：
+单元 1.2 时，你需要实现一个简单 CNN 用于 FashionMNIST 分类：
   - 输入 shape: (B, 1, 28, 28) —— 灰度图
   - 输出 shape: (B, 10) —— 10 类的 logits
   - 最后一层不要加 softmax（CrossEntropyLoss 内部会处理）
@@ -27,17 +27,17 @@ class SimpleCNN(nn.Module):
 
     def __init__(self, num_classes: int = 10):
         super().__init__()
-        # TODO (W2): 定义你的网络层
+        # TODO (单元 1.2): 定义你的网络层
         pass
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """x: (B, 1, 28, 28) -> logits: (B, num_classes)"""
-        # TODO (W2)
+        # TODO (单元 1.2)
         pass
 
 
 # ============================================================
-# 测试代码（W2 用）
+# 测试代码（单元 1.2 用）
 # ============================================================
 
 if __name__ == "__main__":

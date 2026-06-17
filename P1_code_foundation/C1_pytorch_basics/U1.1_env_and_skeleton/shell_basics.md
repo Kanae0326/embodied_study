@@ -1,6 +1,6 @@
-# M1 W1 | Shell 基础（工程生存技能）
+# 单元 1.1 | Shell 基础（工程生存技能）
 
-> 本文档是 W1 的一部分。后续做 ROS 2 colcon build、训练日志重定向、GPU 监控、tmux 挂训练任务时，shell 熟练度会直接决定你卡多久。
+> 本文档是单元 1.1 的一部分。后续做 ROS 2 colcon build、训练日志重定向、GPU 监控、tmux 挂训练任务时，shell 熟练度会直接决定你卡多久。
 > 目标不是背完所有选项，而是**遇到任何场景都能立刻想到该用哪个命令 + 会查 man**。
 
 ---
@@ -214,7 +214,7 @@ python -c "import sys; print('ok'); print('bad', file=sys.stderr)"
 
 ### 练习 5：grep 查代码
 
-在 `~/code/embodied_study/M01_pytorch_basics/` 下：
+在 `~/code/embodied_study/P1_code_foundation/C1_pytorch_basics/` 下：
 - 找出所有用到 `torch.no_grad` 的行，连同文件名和行号
 - 找出所有 `TODO` 注释
 
