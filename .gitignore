@@ -1,0 +1,48 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# ===== 虚拟环境（conda 环境在仓库外，无需忽略）=====
+.venv/
+venv/
+env/
+.env
+
+# ===== Jupyter =====
+.ipynb_checkpoints/
+
+# ===== 模型权重 / checkpoint（体积大）=====
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+checkpoints/
+
+# ===== 数据集（任意层级的 data/、datasets/ 都忽略，含 project/data/）=====
+data/
+datasets/
+
+# ===== 训练日志 / 实验跟踪 =====
+logs/
+runs/
+wandb/
+outputs/
+*.log
+
+# ===== IDE / 编辑器 =====
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ===== 操作系统 =====
+.DS_Store
+Thumbs.db
+
+# 说明：学习者自建的 project/ 下的 .py 代码仍可提交；
+# 其产生的 data/、checkpoints/、__pycache__、*.pth 等已由上面规则忽略。
