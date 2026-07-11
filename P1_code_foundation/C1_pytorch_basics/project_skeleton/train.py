@@ -9,8 +9,9 @@ train.py — 训练主入口（参考接口）
   2. evaluate(model, loader, criterion, device) -> (avg_loss, avg_acc)
   3. main() —— 解析 argparse、创建 dataloader / model / optimizer、跑多个 epoch、保存 best
 
-训练步骤（五步循环，不可打乱）：
-  forward → loss → backward → step → zero_grad
+训练步骤（五步循环）：
+  zero_grad → forward → loss → backward → step
+  本质规则：每次 backward 前清掉上一轮梯度；绝不能清在 backward 与 step 之间
 """
 
 import argparse

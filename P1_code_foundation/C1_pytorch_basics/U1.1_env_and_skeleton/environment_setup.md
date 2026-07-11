@@ -1,8 +1,15 @@
 # 单元 1.1 环境配置手册
 
+## 0. 学习环境说明（先读）
+
+- 本套资料的所有命令按 **Linux** 编写：**WSL 2（Ubuntu）或原生 Ubuntu 均可**，对本课程没有区别。**不要**在 Windows 原生 PowerShell / CMD 里照敲。
+- Windows 机器上装 WSL：管理员 PowerShell 运行 `wsl --install -d Ubuntu`，之后所有操作都在 Ubuntu 终端里进行（官方指引：https://learn.microsoft.com/windows/wsl/install ）。
+- 路径约定：文档统一用 `~/code/embodied_study` 指代仓库根目录。你的克隆位置不同（例如 WSL 里通过 `/mnt/d/...` 访问 Windows 盘），就把命令里的这段路径替换成实际路径。**WSL 下建议把仓库 clone 到 Linux 文件系统（如 `~/code/`）而不是 `/mnt/` 下，文件 IO 快得多。**
+- **换机器学习时：** 环境不随仓库走，每台新机器都要重做本文档第 1–3 节，并跑通第 7 节的最终验证；仓库本身推到远端（GitHub 等私有仓库），新机器 `git clone` 即可。
+
 ## 1. 创建 Python 虚拟环境
 
-推荐使用 Conda（你已有 miniconda3）：
+推荐使用 Conda（新机器上没有就先装 Miniconda：https://docs.anaconda.com/miniconda/ ）：
 
 ```bash
 # 创建环境
@@ -73,6 +80,8 @@ pip install matplotlib numpy pyyaml tqdm
 ```
 
 ## 4. Git 初始化
+
+> 已经在别的机器建好仓库、推到了远端？那本节跳过，直接 `git clone <你的远端地址> ~/code/embodied_study`。
 
 ```bash
 cd ~/code/embodied_study
@@ -192,7 +201,7 @@ if torch.cuda.is_available():
     x = torch.randn(100, 100, device='cuda')
     print('GPU compute OK, device:', x.device)
 else:
-    print('No GPU, will use CPU (also OK for M1)')
+    print('No GPU, will use CPU (本单元 CPU 足够)')
 "
 
 git status  # 确认 git 工作正常

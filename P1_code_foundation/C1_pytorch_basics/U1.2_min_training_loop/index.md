@@ -16,7 +16,7 @@
 - 理论补强：训练五步循环、train/eval 模式、`no_grad`、过拟合信号　→ `study_guide.md`
 
 ## 出关条件
-- **标准出关：** 能说清 `forward → loss → backward → optimizer.step → zero_grad` 的固定顺序与各自作用；`train.py` 能从命令行跑通、loss 下降、val accuracy 明显高于随机（10 类随机=10%，像样的小 CNN 通常能到 88–92%）；有第一版完整训练日志（逐 epoch 的 train/val loss 与 acc）。
+- **标准出关：** 能说清 `zero_grad → forward → loss → backward → optimizer.step` 的顺序、各自作用，以及本质规则（每次 backward 前清掉上一轮梯度，且不能清在 backward 与 step 之间）；`train.py` 能从命令行跑通、loss 下降、val accuracy 明显高于随机（10 类随机=10%，像样的小 CNN 通常能到 88–92%）；有第一版完整训练日志（逐 epoch 的 train/val loss 与 acc）。
 - **弱算力出关：** 数据量 / epoch 数可缩小（只取一部分训练集、跑 2–3 个 epoch），只要闭环完整跑通、日志显示 loss 在下降即算过。
 
 ## 交付物
@@ -30,12 +30,18 @@
 ## 学习路径（按进度推进，不计时）
 
 > 先打通「形状」，再写训练循环。每步先自己写 20–30 分钟再问 AI；写完合上资料能默写出来才算懂。
+> **外部资料的定位：卡壳时的查阅来源，不是前置必读**——`study_guide.md` 本身足够支撑写出全部三个文件。资料清单及"用到什么程度"见 `study_guide.md` 第十节。
 
 1. **建立图景** → 读 `study_guide.md` 第一遍，看懂训练循环的整体数据流。
+   - （可选）想看 `nn.Module` 的官方讲法：[Build Model 官方教程](https://pytorch.org/tutorials/beginner/basics/buildmodel_tutorial.html)，15 分钟
 2. **数据** → 在 `project/dataset.py` 实现 `get_dataloaders`；用脚手架自带的 `if __name__ == "__main__"` 测试验证 batch 形状/类型。
+   - 卡壳时查：[FashionMNIST](https://pytorch.org/vision/stable/generated/torchvision.datasets.FashionMNIST.html) 与 [DataLoader](https://pytorch.org/docs/stable/data.html) 官方文档（只看参数签名和示例）
 3. **模型** → 在 `project/model.py` 实现 `SimpleCNN`；用其 `__main__` 测试验证输出 `(B,10)` 与参数量；用 `print(x.shape)` 逐层确认形状。
+   - 卡壳时查：[nn.Conv2d 文档](https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html)（页内有输出尺寸公式）；（可选）卷积原理没直觉，先看 `study_guide.md` 三，再不够看 [D2L 卷积神经网络章](https://d2l.ai/chapter_convolutional-neural-networks/index.html)
 4. **训练循环** → 在 `project/train.py` 实现 `train_one_epoch / evaluate / main`；**先用很小的子集 + 1 个 epoch 跑通**，确认 loss 在动，再放大。
+   - 卡壳时查：`study_guide.md` 第九节「常见 bug 清单」按症状定位；实在写不出来看 [Optimization 官方教程](https://pytorch.org/tutorials/beginner/basics/optimization_tutorial.html)（有完整循环示例，**看完关掉自己默写**）
 5. **正式训练** → 跑完整若干 epoch，记录日志；（加分）画曲线 + 存 best。
+   - 卡壳时查：[torch.optim 文档](https://pytorch.org/docs/stable/optim.html)（调 lr / 换优化器时）
 
 ## 验收
 逐条对照 `checklist.md`。
@@ -45,7 +51,7 @@
 ## 与脚手架的关系（沿用单元 1.1 的做法）
 `../project_skeleton/{dataset,model,train}.py` 是**参考接口 + 自带测试**，不含实现。在章目录的 `project/` 里自己写实现，再用脚手架的 `__main__` 测试块验证；**别直接改 skeleton**。运行测试：`cd ~/code/embodied_study/P1_code_foundation/C1_pytorch_basics/project/ && python dataset.py`（或 `model.py`）。
 
-## 常见 bug 速查（详见 `study_guide.md` 末尾）
+## 常见 bug 速查（详见 `study_guide.md` 第九节）
 忘了 `optimizer.zero_grad()`（梯度累加，训练发散）｜评估时忘了 `model.eval()` + `torch.no_grad()`｜`CrossEntropyLoss` 喂了 softmax 后的概率而非 raw logits｜标签 dtype 不是 `long`｜数据与模型不在同一 `device`｜用 `loss`（而非 `loss.item()`）累加导致显存/内存涨。
 
 ---

@@ -31,7 +31,7 @@
 
 ## 训练循环（project/train.py）
 
-- [ ] 实现 `train_one_epoch`：含 `model.train()` + 五步（forward→loss→backward→step→zero_grad）
+- [ ] 实现 `train_one_epoch`：含 `model.train()` + 五步（zero_grad→forward→loss→backward→step）
 - [ ] 实现 `evaluate`：含 `model.eval()` + `torch.no_grad()`，**不**反传不更新
 - [ ] 实现 `main`：set_seed → dataloaders → model → criterion/optimizer → 循环 epoch → 打印日志
 - [ ] 统计量用 `.item()` 累加（不是直接加张量）
@@ -47,8 +47,8 @@
 
 ## 概念自测（不看笔记回答）
 
-- [ ] 五步顺序？`zero_grad` 为什么不能省？
-  > forward→loss→backward→step→zero_grad；梯度默认累加，不清零会把上个 batch 的梯度叠进来，训练乱掉。
+- [ ] 五步顺序？`zero_grad` 为什么不能省？能放在 backward 和 step 之间吗？
+  > zero_grad→forward→loss→backward→step；梯度默认累加，每次 backward 前必须清掉上一轮梯度，否则上个 batch 的梯度叠进来、训练乱掉；**绝不能**清在 backward 与 step 之间——会把刚算出的梯度抹掉，参数不再更新。
 - [ ] `model.train()` vs `model.eval()`？评估为什么还要 `torch.no_grad()`？
   > train/eval 切换 dropout/BN 行为；`no_grad` 关闭梯度追踪，省显存且更快，评估不需要梯度。
 - [ ] `CrossEntropyLoss` 的两个输入形状/类型？要不要 softmax？

@@ -19,11 +19,11 @@
       train_one_epoch(...)          evaluate(...)
       model.train()                 model.eval() + no_grad()
       遍历 train_loader             遍历 val_loader
-      ├ forward                     ├ forward
-      ├ loss                        ├ loss
-      ├ backward                    └ 累加 loss/acc（不反传、不更新）
-      ├ optimizer.step
-      └ optimizer.zero_grad
+      ├ optimizer.zero_grad         ├ forward
+      ├ forward                     ├ loss
+      ├ loss                        └ 累加 loss/acc（不反传、不更新）
+      ├ backward
+      └ optimizer.step
               │                            │
               └────────► 打印/记录 train/val 的 loss 与 acc ◄────┘
 ```
@@ -93,12 +93,11 @@ def train_one_epoch(model, loader, criterion, optimizer, device):
     for images, labels in loader:
         images, labels = images.to(device), labels.to(device)   # 上 device
 
-        outputs = model(images)            # 1) forward：得到 logits (B,10)
-        loss = criterion(outputs, labels)  # 2) loss：logits vs 真标签
-
-        optimizer.zero_grad()              # 清梯度（放 backward 前后都行，但必须有）
-        loss.backward()                    # 3) backward：算每个参数的梯度
-        optimizer.step()                   # 4) step：按梯度更新参数
+        optimizer.zero_grad()              # 1) 清掉上一轮梯度（必须在 backward 前）
+        outputs = model(images)            # 2) forward：得到 logits (B,10)
+        loss = criterion(outputs, labels)  # 3) loss：logits vs 真标签
+        loss.backward()                    # 4) backward：算每个参数的梯度
+        optimizer.step()                   # 5) step：按梯度更新参数
 
         total_loss += loss.item() * images.size(0)   # 用 .item() 取标量！
         total_correct += (outputs.argmax(1) == labels).sum().item()
@@ -109,7 +108,7 @@ def train_one_epoch(model, loader, criterion, optimizer, device):
 **每一步为什么在那儿：**
 - `model.train()`：让 dropout / batchnorm 处于训练行为（即使你这次没用，养成习惯）。
 - `.to(device)`：数据必须和模型在同一设备，否则报 `device mismatch`。
-- `zero_grad()`：梯度默认**累加**，不清零会把上一个 batch 的梯度叠进来 → 训练乱掉。
+- `zero_grad()`：梯度默认**累加**，不清零会把上一个 batch 的梯度叠进来 → 训练乱掉。本质规则：**每次 `backward()` 前清掉上一轮梯度**——放循环开头或上一轮 `step()` 之后都行，但**绝不能放在 `backward()` 与 `step()` 之间**（会抹掉刚算好的梯度，参数不再更新）。唯一的合法例外是有意做「梯度累积」，单元 3.2 会遇到。
 - `loss.item()`：把单元素张量取成 Python float 再累加；直接 `+= loss` 会**留住计算图**，显存/内存一路涨。
 
 ---
@@ -167,6 +166,8 @@ def main():
 
 调试顺序：**先把 `num_epochs=1` + 一个很小的子集跑通**，确认 loss 在下降、形状没错，再放大正式训练。
 
+> 关于 `Adam`：一种自适应学习率的优化器，对 lr 的取值没有朴素 SGD 那么敏感，小模型上「开箱即用」，所以这里选它。本单元把它当黑盒用即可，原理（动量、二阶矩估计）后续篇章再补；想提前看见第十节资料。
+
 ---
 
 ## 八、过拟合：train 与 val 一起看
@@ -195,9 +196,26 @@ def main():
 
 ---
 
-## 十、本单元自测（不看笔记回答）
+## 十、外部资料（何时用 · 用到什么程度）
 
-1. `train_one_epoch` 里五步的顺序是什么？`zero_grad` 为什么不能省？
+> 定位与单元 1.1 相同：**卡壳或想深挖时的查阅来源，不是前置必读**。本文档自身足够支撑写出 `dataset / model / train` 三个文件。
+> 每条资料对应学习路径的哪一步，见 [`index.md`](index.md) 学习路径里的逐步标注。
+
+| 资料 | 什么时候用 | 用到什么程度 |
+|---|---|---|
+| [torchvision FashionMNIST 文档](https://pytorch.org/vision/stable/generated/torchvision.datasets.FashionMNIST.html) | 步骤 2 写 `get_dataloaders` 时查 `root / train / download / transform` 参数 | 看签名和示例 |
+| [DataLoader 官方文档](https://pytorch.org/docs/stable/data.html) | `batch_size / shuffle / num_workers` 的行为拿不准 | 看 DataLoader 一节 |
+| [nn.Conv2d 文档](https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html) | 步骤 3 算不清卷积输出尺寸 | 用页内的输出尺寸公式验证你手算的形状 |
+| [Build Model 官方教程](https://pytorch.org/tutorials/beginner/basics/buildmodel_tutorial.html) | `nn.Module` 的 `__init__` / `forward` 写法不确定 | 15 分钟过一遍 |
+| [Optimization 官方教程](https://pytorch.org/tutorials/beginner/basics/optimization_tutorial.html) | 步骤 4 训练循环实在写不出来 | 有完整循环示例；**看完关掉，自己默写**，别照抄 |
+| [D2L 卷积神经网络章](https://d2l.ai/chapter_convolutional-neural-networks/index.html) | （可选）想真正理解卷积核 / padding / stride / pooling | 从"从全连接到卷积"看到"池化"即可 |
+| [torch.optim 文档](https://pytorch.org/docs/stable/optim.html) | （可选）想知道 Adam 和 SGD 差在哪、还有哪些优化器 | 本单元会用即可，原理后续再补 |
+
+---
+
+## 十一、本单元自测（不看笔记回答）
+
+1. `train_one_epoch` 里五步的顺序是什么？`zero_grad` 为什么不能省、又为什么不能放在 `backward()` 和 `step()` 之间？
 2. `model.train()` 和 `model.eval()` 有什么区别？评估为什么还要 `torch.no_grad()`？
 3. `CrossEntropyLoss` 的两个输入分别是什么形状、什么 dtype？模型最后该不该加 softmax？
 4. 累加统计量时为什么要用 `loss.item()` 而不是 `loss`？

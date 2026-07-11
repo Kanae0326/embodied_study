@@ -1,20 +1,8 @@
 # 单元 1.1 学习指南：PyTorch 张量与自动微分
 
-## 本单元学习路径（v4 进度制 · 按完成度推进，不计时）
-
-> 做完一步、对应自测通过，再进入下一步；不绑定天数/小时。
-> 你有 VLA 微调经验，张量/autograd 这部分若能直接通过文末自测，可跳过讲解、直接做练习。
-
-```
-步骤 1  环境配置              --> environment_setup.md
-步骤 2  shell 基础 + 练习 1-6 --> shell_basics.md
-步骤 3  张量 Part 1-5         --> tensor_playground.py 前半
-步骤 4  autograd Part 6-7     --> tensor_playground.py 后半
-步骤 5  自建 project/ + utils --> ../project_skeleton/SETUP.md 指引下自建目录，写 utils.py 5 个函数
-```
-
-**本单元不做：** model.py / dataset.py / train.py 的实现 —— 按 v4 划分属于**单元 1.2**（训练最小闭环）。
-单元 1.1 专注于"环境就绪 + shell 熟练 + tensor 练透 + utils 自己写出来"。
+> **学习路径（步骤顺序 + 每步对应的外部资料）以 [`index.md`](index.md) 为准，本文不再重复**——本文只负责理论讲解与资料索引。
+> 你有 VLA 微调经验：若能直接通过文末自测，可跳过讲解、直接做 `tensor_playground.py` 练习。
+> **本单元不做** model.py / dataset.py / train.py 的实现——按 v4 划分属于**单元 1.2**（训练最小闭环）。
 
 ---
 
@@ -92,6 +80,10 @@ batch_size = 64
                  └──────┬──────┘
                         ▼
               ┌──────────────────┐
+              │optimizer.zero_grad│   清掉上一轮梯度（梯度默认会累加）
+              └────────┬─────────┘
+                       ▼
+              ┌──────────────────┐
               │  model.forward()  │   前向传播：数据通过网络，得到预测
               └────────┬─────────┘
                        ▼
@@ -106,18 +98,14 @@ batch_size = 64
                        ▼
               ┌──────────────────┐
               │ optimizer.step()  │   参数更新：按梯度方向走一步
-              └────────┬─────────┘
-                       ▼
-              ┌──────────────────┐
-              │optimizer.zero_grad│   清除梯度（否则梯度会累加）
               └──────────────────┘
 ```
 
 **要点：**
-- `forward` → `loss` → `backward` → `step` → `zero_grad`，这五步是不可打乱的固定顺序
+- 本课程统一写成 `zero_grad` → `forward` → `loss` → `backward` → `step`（清零放在每轮循环开头）
+- **本质规则只有一条：每次 `backward()` 之前，必须把上一轮的梯度清掉**（梯度默认累加）。清零放循环开头、或上一轮 `step()` 之后都可以，但**绝不能放在 `backward()` 和 `step()` 之间**——那会把刚算出来的梯度抹掉，参数就不再更新
 - `backward()` 不更新参数，只计算梯度并存在 `param.grad` 里
 - `step()` 才真正更新参数：`param = param - lr * param.grad`
-- 如果不调 `zero_grad()`，梯度会在每次 `backward()` 时累加
 
 ---
 
@@ -196,37 +184,20 @@ x[[0, 2, 4]]    # 花式索引，取第 0,2,4 个
 
 ---
 
-## 六、推荐学习资源
+## 六、外部资料（何时用 · 用到什么程度）
 
-### 必读（按优先级排序）
+> 定位：**卡壳或自测不过时的查阅来源，不是前置必读**。能直接通过文末自测，就一条都不用看。
+> 每条资料对应学习路径的哪一步，见 [`index.md`](index.md) 学习路径里的逐步标注。
 
-1. **PyTorch 官方 Tensor 教程**
-   https://pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html
-   - 15 分钟快速入门张量操作
-
-2. **PyTorch 官方 Autograd 教程**
-   https://pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html
-   - 理解计算图和自动微分
-
-3. **PyTorch 官方 Build Model 教程**
-   https://pytorch.org/tutorials/beginner/basics/buildmodel_tutorial.html
-   - 理解 `nn.Module` 的基本结构
-
-### 补充阅读（有余力时）
-
-4. **Dive into Deep Learning - 2. Preliminaries**
-   https://d2l.ai/chapter_preliminaries/index.html
-   - 系统讲解张量运算和自动微分
-
-5. **PyTorch Cheat Sheet**
-   https://pytorch.org/tutorials/beginner/ptcheat.html
-   - 常用 API 速查
-
-### 视频（可选）
-
-6. **3Blue1Brown - Neural Networks 系列**
-   https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi
-   - 直觉性极强的梯度和反向传播讲解
+| 资料 | 什么时候用 | 用到什么程度 |
+|---|---|---|
+| [PyTorch Tensors 官方教程](https://pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html) | 步骤 3 张量练习卡壳 | 跟着敲一遍，约 15 分钟 |
+| [PyTorch Autograd 官方教程](https://pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html) | 步骤 4 autograd 练习卡壳，或自测 2–4 题答不上 | 看懂"计算图"小节即可 |
+| [PyTorch 官方文档](https://pytorch.org/docs/stable/) | 任何 API 用法拿不准 | 按函数名查，只看签名和示例 |
+| [PyTorch Cheat Sheet](https://pytorch.org/tutorials/beginner/ptcheat.html) | 想不起 API 名字 | 当速查表，不通读 |
+| [D2L Preliminaries 章](https://d2l.ai/chapter_preliminaries/index.html) | （可选）想系统补张量运算/自动微分的数学 | ndarray 到 autograd 各小节 |
+| [3Blue1Brown 神经网络系列](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi) | （可选）对梯度/反向传播没有直觉 | 第 3、4 集 |
+| [PyTorch Build Model 官方教程](https://pytorch.org/tutorials/beginner/basics/buildmodel_tutorial.html) | **本单元用不到**；单元 1.2 写 `SimpleCNN` 前再看 | 看 `nn.Module` 的 `__init__`/`forward` 结构 |
 
 ---
 

@@ -2,6 +2,7 @@
 
 > **v4 篇 1 · 章 1（PyTorch 基础）· 单元 1.1。** 本文件夹即本单元的全部资料，先看本页。
 > 章级共享的 `../project_skeleton/`（FashionMNIST 项目骨架）贯穿单元 1.1–1.4：本单元写 `utils.py`，后续单元写 `model.py / dataset.py / train.py`。
+> **学习环境：** 全套命令按 **Linux** 编写，WSL 2 或原生 Ubuntu 均可（配置见 `environment_setup.md` 第 0 节）。文中统一用 `~/code/embodied_study` 指代仓库根目录，你的克隆位置不同就替换成实际路径。
 
 ---
 
@@ -32,12 +33,18 @@
 
 > 做完一步、对应自测通过，再进入下一步；快慢由你。
 > 你有 VLA 微调经验——张量/autograd 若能直接通过文末自测，可跳过 `study_guide.md` 直接做练习。
+> **外部资料的定位：卡壳或自测不过时的查阅来源，不是前置必读**——能过自测就直接往前走。每条资料"何时用、用到什么程度"另见 `study_guide.md` 第六节。
 
 1. **环境就绪** → `environment_setup.md`：跑通文末最终验证脚本，全部 OK。
+   - 卡壳时查：[PyTorch 官方安装选择器](https://pytorch.org/get-started/locally/)（版本/CUDA 对不上时以它为准）
 2. **shell 熟练** → `shell_basics.md`：练习 1–6 全做完。
-3. **张量** → `tensor_playground.py` Part 1–5：TODO 全部取消注释并跑出预期 shape。
-4. **自动微分** → `tensor_playground.py` Part 6–7。
+   - 卡壳时查：`man <命令>`；复杂管道命令贴进 [explainshell.com](https://explainshell.com) 逐段解析
+3. **张量** → `tensor_playground.py` Part 1–5：TODO 全部取消注释并跑出预期 shape。理论先看 `study_guide.md` 一、五两节。
+   - 卡壳时查：[PyTorch Tensors 官方教程](https://pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html)（跟敲约 15 分钟）；（可选）想系统补数学直觉看 [D2L Preliminaries 章](https://d2l.ai/chapter_preliminaries/index.html)
+4. **自动微分** → `tensor_playground.py` Part 6–7。理论先看 `study_guide.md` 二、三、四节。
+   - 卡壳时查：[PyTorch Autograd 官方教程](https://pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html)；（可选）想要几何直觉看 [3Blue1Brown 神经网络系列](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi)第 3–4 集
 5. **工具函数** → 按 `../project_skeleton/SETUP.md` 在章目录下自建 `project/`，自己写 `utils.py` 五个函数。
+   - 卡壳时查：[PyTorch 官方文档](https://pytorch.org/docs/stable/)（按函数名查 `manual_seed` / `save` / `load` / `state_dict` 的用法，不要搜完整实现）
 
 ## 验收
 逐条对照 `checklist.md`。
