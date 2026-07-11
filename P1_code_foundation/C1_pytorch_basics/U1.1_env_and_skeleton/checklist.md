@@ -1,6 +1,6 @@
 # 单元 1.1 验收清单 / 出关条件
 
-> v4 原则：单元 1.1 只做"环境与骨架"。model/dataset/train.py 的 smoke test 属于单元 1.2。
+> 单元划分：单元 1.1 只做"环境与骨架"。model/dataset/train.py 的 smoke test 属于单元 1.2。
 > 本单元专注：**环境就绪 + shell 熟练 + tensor 练透 + utils.py 自己写出来**。
 
 ---

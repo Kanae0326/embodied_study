@@ -1,6 +1,6 @@
 # 单元 1.2 · 训练最小闭环
 
-> **v4 篇 1 · 章 1（PyTorch 基础）· 单元 1.2。** 先看本页。
+> **篇 1 · 章 1（PyTorch 基础）· 单元 1.2。** 先看本页。
 > **前置：** 单元 1.1 必须先出关——本单元会用到你在 `../project/utils.py` 里写好的 `set_seed / accuracy / save_checkpoint / count_parameters`。
 > 本单元在章级 `../project_skeleton/` 的 `dataset.py / model.py / train.py` 三个脚手架上，把 FashionMNIST 的训练闭环亲手写出来。
 
@@ -10,9 +10,9 @@
 从「会写工具函数」升级到「能自己写出第一段完整的训练循环」：加载数据 → 定义模型 → 前向 → 反传 → 更新 → 评估，跑通一个能收敛的 FashionMNIST 分类器。
 
 ## 核心必做
-- 用 torchvision 加载 FashionMNIST，切 train / val，确认 batch 形状与标签类型　→ 实现 `../project_skeleton/dataset.py` 的 `get_dataloaders`
-- 自己写一个小 CNN 与 forward（输入 `(B,1,28,28)` → 输出 `(B,10)` logits）　→ 实现 `../project_skeleton/model.py` 的 `SimpleCNN`
-- 实现 `train_one_epoch` 与 `evaluate`，跑通若干 epoch 并记录 loss / accuracy 日志　→ 实现 `../project_skeleton/train.py`
+- 用 torchvision 加载 FashionMNIST，切 train / val，确认 batch 形状与标签类型　→ 在 `project/dataset.py` 实现 `get_dataloaders`
+- 自己写一个小 CNN 与 forward（输入 `(B,1,28,28)` → 输出 `(B,10)` logits）　→ 在 `project/model.py` 实现 `SimpleCNN`
+- 实现 `train_one_epoch` 与 `evaluate`，跑通若干 epoch 并记录 loss / accuracy 日志　→ 在 `project/train.py` 实现
 - 理论补强：训练五步循环、train/eval 模式、`no_grad`、过拟合信号　→ `study_guide.md`
 
 ## 出关条件
@@ -48,8 +48,15 @@
 
 ---
 
-## 与脚手架的关系（沿用单元 1.1 的做法）
-`../project_skeleton/{dataset,model,train}.py` 是**参考接口 + 自带测试**，不含实现。在章目录的 `project/` 里自己写实现，再用脚手架的 `__main__` 测试块验证；**别直接改 skeleton**。运行测试：`cd ~/code/embodied_study/P1_code_foundation/C1_pytorch_basics/project/ && python dataset.py`（或 `model.py`）。
+## 与脚手架的关系（本单元先复制，再填空）
+`../project_skeleton/{dataset,model,train}.py` 是**参考接口 + 自带测试**（函数体是 TODO）。本单元开始时，把这三个文件**复制**到你的 `project/`（覆盖单元 1.1 建的空占位），之后**只改复制过来的版本**；skeleton 原件保持原样，留作对照：
+
+```bash
+cd ~/code/embodied_study/P1_code_foundation/C1_pytorch_basics/project/
+cp ../project_skeleton/dataset.py ../project_skeleton/model.py ../project_skeleton/train.py .
+```
+
+每个文件底部自带 `if __name__ == "__main__":` 测试块；实现完成后在 `project/` 里直接 `python dataset.py`（或 `model.py` / `train.py`）验证。
 
 ## 常见 bug 速查（详见 `study_guide.md` 第九节）
 忘了 `optimizer.zero_grad()`（梯度累加，训练发散）｜评估时忘了 `model.eval()` + `torch.no_grad()`｜`CrossEntropyLoss` 喂了 softmax 后的概率而非 raw logits｜标签 dtype 不是 `long`｜数据与模型不在同一 `device`｜用 `loss`（而非 `loss.item()`）累加导致显存/内存涨。

@@ -1,6 +1,6 @@
 # 单元 1.1 · 环境与骨架
 
-> **v4 篇 1 · 章 1（PyTorch 基础）· 单元 1.1。** 本文件夹即本单元的全部资料，先看本页。
+> **篇 1 · 章 1（PyTorch 基础）· 单元 1.1。** 本文件夹即本单元的全部资料，先看本页。
 > 章级共享的 `../project_skeleton/`（FashionMNIST 项目骨架）贯穿单元 1.1–1.4：本单元写 `utils.py`，后续单元写 `model.py / dataset.py / train.py`。
 > **学习环境：** 全套命令按 **Linux** 编写，WSL 2 或原生 Ubuntu 均可（配置见 `environment_setup.md` 第 0 节）。文中统一用 `~/code/embodied_study` 指代仓库根目录，你的克隆位置不同就替换成实际路径。
 

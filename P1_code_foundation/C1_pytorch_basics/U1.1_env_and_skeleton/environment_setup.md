@@ -34,16 +34,16 @@ source ~/envs/embodied/bin/activate
 
 ### 有 NVIDIA GPU (推荐)
 
-先检查你的 CUDA 版本：
+先检查驱动支持的 CUDA 版本上限：
 ```bash
 nvidia-smi
 # 看右上角 CUDA Version，如 12.x
 ```
 
-安装 PyTorch（以 CUDA 12.4 为例）：
-```bash
-pip install torch torchvision --index-url https://download.pytorch.org/whl/cu124
-```
+然后用 **PyTorch 官方安装选择器**生成安装命令（选 Linux / pip / 对应 CUDA）：
+https://pytorch.org/get-started/locally/
+
+生成的命令形如 `pip install torch torchvision --index-url https://download.pytorch.org/whl/cuXXX`。**cuXXX 以选择器给出的为准，不要照抄教程或旧文档里的版本号**——旧 CUDA 渠道（如 cu124）已停留在旧版 PyTorch，会无意中装到过时版本。
 
 ### 仅 CPU
 
