@@ -77,7 +77,7 @@ C1_pytorch_basics/
 ├─ project_skeleton/           ← 章级共享（参考接口，不含实现）
 │  ├─ SETUP.md  utils.py       （单元 1.1）
 │  └─ model.py  dataset.py  train.py   （单元 1.2）
-└─ project/                    ← 你自己建的实现（不入库）
+└─ project/                    ← 你自己建的实现（.py 代码必须入库；data/checkpoints 等产物由 .gitignore 排除）
 ```
 
 > 注：`project_skeleton/model.py · dataset.py · train.py` 属于**单元 1.2**；本单元（1.1）只建空占位、不实现。单元 1.2 的资料见 `../U1.2_min_training_loop/`。

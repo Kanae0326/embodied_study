@@ -1,7 +1,7 @@
 # 单元 1.2 · 训练最小闭环
 
 > **篇 1 · 章 1（PyTorch 基础）· 单元 1.2。** 先看本页。
-> **前置：** 单元 1.1 必须先出关——本单元会用到你在 `../project/utils.py` 里写好的 `set_seed / accuracy / save_checkpoint / count_parameters`。
+> **前置：** 单元 1.1 必须先出关——本单元核心会用到你在 `../project/utils.py` 里写好的 `set_seed / accuracy / count_parameters`；`save_checkpoint` 仅用于可选的 best checkpoint。
 > 本单元在章级 `../project_skeleton/` 的 `dataset.py / model.py / train.py` 三个脚手架上，把 FashionMNIST 的训练闭环亲手写出来。
 
 ---
@@ -53,10 +53,11 @@
 
 ```bash
 cd ~/code/embodied_study/P1_code_foundation/C1_pytorch_basics/project/
-cp ../project_skeleton/dataset.py ../project_skeleton/model.py ../project_skeleton/train.py .
+# 仅在单元 1.2 开始时执行一次；确认三个目标文件仍是单元 1.1 留下的空占位
+cp -i ../project_skeleton/dataset.py ../project_skeleton/model.py ../project_skeleton/train.py .
 ```
 
-每个文件底部自带 `if __name__ == "__main__":` 测试块；实现完成后在 `project/` 里直接 `python dataset.py`（或 `model.py` / `train.py`）验证。
+`cp -i` 会在覆盖已有文件前询问：只有确认目标文件仍为空时才输入 `y`；如果已经写过代码，输入 `n` 并手动合并，避免丢失学习成果。每个文件底部自带 `if __name__ == "__main__":` 测试块；实现完成后在 `project/` 里直接 `python dataset.py`（或 `model.py` / `train.py`）验证。
 
 ## 常见 bug 速查（详见 `study_guide.md` 第九节）
 忘了 `optimizer.zero_grad()`（梯度累加，训练发散）｜评估时忘了 `model.eval()` + `torch.no_grad()`｜`CrossEntropyLoss` 喂了 softmax 后的概率而非 raw logits｜标签 dtype 不是 `long`｜数据与模型不在同一 `device`｜用 `loss`（而非 `loss.item()`）累加导致显存/内存涨。

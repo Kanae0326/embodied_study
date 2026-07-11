@@ -12,7 +12,7 @@
 - 自己想清楚 `import` 怎么写、模块怎么组织
 - 第一次踩"文件放哪、相对导入、`if __name__ == '__main__'`"的坑
 
-**这些能力是 M3 拆微调仓库、M9 改仿真环境时真正需要的基本功。**
+**这些能力是后续拆微调仓库、改仿真环境时真正需要的基本功。**
 
 ---
 
@@ -27,7 +27,7 @@ cd project/
 touch utils.py model.py dataset.py train.py
 ```
 
-这 4 个文件单元 1.1 **只需要写 utils.py**。其他 3 个文件先建空的占位；单元 1.2 开始时，把 skeleton 的 `dataset.py / model.py / train.py` **复制过来覆盖占位**，再填其中的 TODO（见下方分工表和第 3 节命令）。
+这 4 个文件单元 1.1 **只需要写 utils.py**。其他 3 个文件先建空的占位；单元 1.2 开始时，确认它们仍为空，再把 skeleton 的 `dataset.py / model.py / train.py` **复制过来覆盖占位**，然后填其中的 TODO（见下方分工表和第 3 节命令）。
 
 ### 2. 把 skeleton 当作参考，不要当作答案
 
@@ -50,8 +50,10 @@ python utils.py
 # 注意：直接跑 ../project_skeleton/utils.py 没有意义——里面 5 个函数都是 pass，必然失败。
 
 # —— dataset / model / train（单元 1.2）——
-# 先复制 skeleton 再填 TODO，测试块随文件自带（仍在 project/ 目录下执行）：
-cp ../project_skeleton/dataset.py ../project_skeleton/model.py ../project_skeleton/train.py .
+# 仅在三个目标文件仍为空占位时执行；-i 会在覆盖前询问：
+cp -i ../project_skeleton/dataset.py ../project_skeleton/model.py ../project_skeleton/train.py .
+# 空文件可确认输入 y；若已经写过代码则输入 n，之后手动合并，避免覆盖成果。
+# 填完 TODO 后，测试块随文件自带（仍在 project/ 目录下执行）：
 python dataset.py   # 实现完成后逐个验证；model.py / train.py 同理
 ```
 
@@ -73,6 +75,7 @@ python dataset.py   # 实现完成后逐个验证；model.py / train.py 同理
 - [ ] 我有一个自己建的 `project/` 目录（不是 `project_skeleton/`）
 - [ ] `project/utils.py` 里 5 个函数都是我自己写的
 - [ ] `cd project/ && python utils.py` 输出 `All 5 tests PASSED!`
+- [ ] `project/*.py` 已被 Git 跟踪并提交；只忽略 data/checkpoints/日志/缓存等生成产物
 - [ ] 我没有直接复制 skeleton 里的实现（如果有，还能不看答案重写一遍吗？）
 
 ---

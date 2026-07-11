@@ -178,7 +178,7 @@ cd ~/code/embodied_study/P1_code_foundation/C1_pytorch_basics/
 #     ├── SETUP.md                       # 怎么用骨架
 #     ├── utils.py                       # 单元 1.1 写
 #     └── model.py / dataset.py / train.py   # 单元 1.2 写
-# （你自己建的 project/ 在章目录下，不入库）
+# （你自己建的 project/ 在章目录下；其中 .py 代码必须入库，data/checkpoints 等产物由 .gitignore 排除）
 ```
 
 ## 7. 最终验证
