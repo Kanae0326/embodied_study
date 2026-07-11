@@ -94,7 +94,7 @@
 
 **两条原则：**
 - **用同一条主线：** 全程围绕篇 3（单元 7.1）选定的 LIBERO 主任务，不另起炉灶。
-- **刻意做小：** 1 个带图像与语言指令的任务、少量演示（量级几十条即可）、一个算力友好的小 VLA。**目标是「整条链路自己跑通且可解释」，不是刷高成功率。**
+- **刻意做小：** 1 个带图像与语言指令的任务、一小批演示（对齐官方口径：SmolVLA 教程建议约 50 条高质量演示，其示例中 25 条已明显不足；条数打折时成功率会很低——弱算力档允许，见下方出关条件）、一个算力友好的小 VLA。**目标是「整条链路自己跑通且可解释」，不是刷高成功率。**
 
 **四个阶段 ↔ 复用的单元：**
 
@@ -102,12 +102,12 @@
 |---|---|---|
 | ① 收集 | 在仿真里用遥操作 / 脚本专家，为选定主任务采一小批演示 | 单元 11.1 |
 | ② 处理 | 把这批演示转成 LeRobot 标准格式，本地训练脚本可直接读取 | 单元 11.2 |
-| ③ 训练 | 在**这批自采数据**上微调一个小 VLA（首选 SmolVLA；备选 OpenVLA + LoRA） | 单元 13.2 |
+| ③ 训练 | 在**这批自采数据**上微调一个小 VLA（首选 SmolVLA；OpenVLA + LoRA 仅大显存备选，见单元 13.2） | 单元 13.2 |
 | ④ 测试 | 闭环 rollout 评估成功率 + 失败分类，并纳入 benchmark 语境 | 单元 13.3（＋ 14.1） |
 
 **出关条件（Capstone 专属）：**
 - **标准出关：** 同一份自采数据从 ①→④ 全程打通；微调出的 VLA 能在仿真里对该任务做闭环 rollout 并报告成功率与失败分类；能讲清每个阶段的数据形态与接口。
-- **弱算力出关：** 演示条数、训练步数、模型规模都可缩小（SmolVLA 专为消费级硬件设计）；只要闭环跑通、有少量 rollout 结果且链路可解释即算过。
+- **弱算力出关：** 完成四件事即算过——① 数据校验（格式、形状、时间戳能被训练脚本读通）；② 单 batch 过拟合测试（loss 能压下去，证明数据流与梯度链路正确）；③ checkpoint 保存/加载可用；④ 少量闭环 rollout，且**失败分类必须完成**。**允许成功率很低甚至为 0**，但要能说清失败发生在链路的哪一环。（算力预期：官方教程 20k steps 在单张 A100 上约 4 小时，消费级显卡按数倍估；SmolVLA 对消费级硬件友好指的是「能跑」，「像样的成功率」仍需足够数据与步数——弱算力档不追求它。）
 - **真机升级（可选加分 → 附录 F）：** 若拿得到 SO-100/SO-101 等低成本臂，用真机遥操作重采 ①、并在真机上重做 ④，②③ 复用。
 
 **交付物：** 自采数据集（LeRobot 格式）＋ VLA 微调实验记录 ＋ 闭环 rollout 视频 / 成功率表 ＋ 一页《我的 VLA 数据飞轮》串讲（四阶段各自的输入输出与踩坑）。
@@ -135,7 +135,7 @@
 
 ### 单元 1.2 训练最小闭环
 - **核心必做：** 用 torchvision 加载 FashionMNIST，切 train/val；自己写一个小 CNN 与 forward；实现 `train_one_epoch` 与 `evaluate`；跑通若干 epoch，记录最基础的 loss / accuracy 日志。
-- **标准出关：** 能说清 `forward → loss → backward → optimizer.step → zero_grad` 的固定先后顺序与各自作用；有第一版完整训练日志。
+- **标准出关：** 能说清 `zero_grad → forward → loss → backward → optimizer.step` 的顺序与各自作用（本质规则：每次 backward 前清掉上一轮梯度，且不能清在 backward 与 step 之间）；有第一版完整训练日志。
 - **弱算力出关：** 数据量/epoch 数可缩小，只要闭环跑通、日志完整即算过。
 - **交付物：** 第一版训练日志 + 可运行的 `train.py`。
 - **可选加分：** 加 val 曲线与最佳模型记录。
@@ -273,7 +273,7 @@
 
 ## 章 6｜ROS 2 系统接口最小包
 
-**章目标：** 掌握招聘与部署语境里最常见的 ROS 2 接口能力：节点、topic、service/action、launch、rosbag、TF、URDF、RViz、MoveIt 2 最小链路。重点是能把算法输出接进机器人系统，而不是堆完整机器人软件栈。
+**章目标：** 掌握招聘与部署语境里最常见的 ROS 2 接口能力：节点、topic、service/action、launch、rosbag、TF、URDF、RViz，以及 policy → ROS 命令接口。重点是能把算法输出接进机器人系统，而不是堆完整机器人软件栈。**MoveIt 2 demo 属于标准档加分/补交项，不是本章门槛。**
 
 ### 单元 6.1 ROS 2 工作区与通信
 - **核心必做：** 配置 ROS 2 开发环境；建立 colcon workspace 与 Python package；跑通 talker/listener；理解 node / topic / message / service / action / launch；会用 `ros2 node/topic/interface/launch` 做最小调试；写一个 publisher/subscriber，把策略输出的目标位姿或动作命令发布出去。
@@ -287,11 +287,11 @@
 - **弱环境出关：** 若图形界面受限，至少完成 URDF、TF 发布和命令行 transform 查询；RViz 截图可延后补。
 - **交付物：** 简化 URDF + TF tree 记录 + RViz 截图或命令行验证记录。
 
-### 单元 6.3 MoveIt 2、rosbag 与策略接口
-- **核心必做：** 跑通一个 MoveIt 2 最小 pose goal 或 joint goal demo；学会 rosbag record/play 记录与复放关键 topic；设计 policy → action → ROS command 的接口，把学习策略输出转换为目标位姿、关节目标或速度命令；写 1 页说明"我的策略如何进入 ROS 执行层"。
+### 单元 6.3 rosbag 与策略接口
+- **核心必做：** 学会 rosbag record/play 记录与复放关键 topic；设计 policy → action → ROS command 的接口，把学习策略输出转换为目标位姿、关节目标或速度命令；写 1 页说明"我的策略如何进入 ROS 执行层"。
 - **标准出关：** 能回答"你的策略怎么部署到真机执行层"，并能用 ROS 2 最小 demo 展示从策略输出到机器人命令的接口。
-- **弱环境出关：** 若 MoveIt 2 安装卡死，先完成 rosbag + topic command + 接口设计；MoveIt 2 作为本章补交项，不影响进入篇 3。
-- **交付物：** ROS 策略接口 demo + rosbag 记录 + 部署接口说明。
+- **标准档加分（非门槛）：** 跑通一个 MoveIt 2 最小 pose goal 或 joint goal demo（用 apt 二进制包安装，不要从源码编译）。装不上就记录卡点后跳过，作为本章补交项，不影响进入篇 3；更深的 MoveIt 2 工程见附录 A。
+- **交付物：** ROS 策略接口 demo + rosbag 记录 + 部署接口说明（+ 可选的 MoveIt 2 demo 记录）。
 
 ---
 
@@ -302,7 +302,7 @@
 
 # 篇 3 · 仿真与模仿学习（主线核心）
 
-> 这是拉开差距的关键。原则：**进入本篇即固定 LIBERO 主线，后面所有方法尽量围绕同一任务展开。** 篇 2 已完成 ROS 2 最小接口，本篇开始把策略学习、数据管线与系统接口连起来。
+> 这是拉开差距的关键。原则：**进入本篇即固定 LIBERO 主线，后面的 IL 与 VLA 方法都围绕同一任务展开**（RL 是唯一例外，见篇 4 的环境说明）。篇 2 已完成 ROS 2 最小接口，本篇开始把策略学习、数据管线与系统接口连起来。
 
 ---
 
@@ -310,10 +310,13 @@
 
 **章目标：** 建立"任务—状态—动作—奖励—回合"的仿真语言，并**固定后半程主任务**。
 
+> **环境门槛（开始 7.1 前先过）：** LIBERO / LeRobot 的闭环评估官方仅支持 **Linux**（WSL2 或原生 Ubuntu 均可，正好是你的学习环境）。先完成"环境出关"：装通 LIBERO 及依赖 → 跑通 `reset()` / `step()` → 用离屏渲染保存出一帧图像或一段视频（`MUJOCO_GL=egl`；WSL2 下先验证 EGL 可用）。
+> **降级路径：** 环境连续卡住 2 个学习时段仍未解决 → 先用官方预处理好的 LIBERO 数据集（Hugging Face 上的 LeRobot 格式版本）完成离线训练与离线指标，把闭环 rollout 评估推迟到 Linux 环境可用时补做；**不因环境问题更换主线任务**。
+
 ### 单元 7.1 固定 LIBERO 主任务
-- **核心必做：** 在 LIBERO 中选定 1 个带图像与语言指令的主任务；跑通基础 env；看懂 observation / action / reward / done / reset；明确任务里的视觉输入、语言指令、动作空间与成功条件。PushT 只允许作为环境 smoke test，不作为主线任务或 Capstone 任务。
+- **核心必做：** 在 LIBERO 中选定 1 个带图像与语言指令的主任务；跑通基础 env；看懂 observation / action / reward / done / reset；明确任务里的视觉输入、语言指令、动作空间与成功条件。PushT 只允许作为环境 smoke test，不作为主线任务或 Capstone 任务（它在章 9 另有正式用途：RL 的 dense reward 环境）。
 - **标准出关：** 不再把环境当黑盒；明确 LIBERO 主任务并记录选择理由，能说明它为什么适合后续 VLA Capstone。
-- **弱算力出关：** 仍以 LIBERO 为主线，缩小 episode 数、演示条数和训练步数；如需 PushT，只用于验证安装和脚本结构。
+- **弱算力出关：** 仍以 LIBERO 为主线，缩小 episode 数、演示条数和训练步数；环境安装受阻时按上方「环境门槛」的降级路径处理。
 - **交付物：** 主任务选择记录 + 仿真环境笔记。
 
 ### 单元 7.2 改任务定义
@@ -372,7 +375,7 @@
 
 # 篇 4 · 强化学习、Sim-to-Real 与数据工程
 
-> 继续围绕篇 3 选定的同一主任务展开。RL 先"跑稳一个"，不急着换算法。
+> Sim-to-Real 与数据工程继续围绕篇 3 选定的 LIBERO 主任务展开；**RL（章 9）是唯一例外**——LIBERO 只有任务完成 +1 的稀疏奖励（为模仿学习设计），从零跑 PPO/SAC 会把学习重点变成奖励工程，所以 RL 单元改用独立的 dense reward 小环境（见章 9 环境说明），与主线统一实验模板与评价方式，不强制统一任务。RL 先"跑稳一个"，不急着换算法。
 
 ---
 
@@ -380,14 +383,16 @@
 
 **章目标：** 理解策略优化和奖励设计。
 
+> **环境说明：** 本章不用 LIBERO——稀疏奖励会让 RL 入门变成奖励工程和环境改造。单元 9.1 用 Gymnasium 经典控制环境（CartPole 配 PPO / Pendulum 配 SAC）把训练循环跑稳；单元 9.2 的奖励设计实验在 gym-pusht 上做（dense reward：按 T 块与目标区域的覆盖率给分；LeRobot 生态自带，篇 3 smoke test 时已装过）。seed、日志、结果表沿用主线实验模板——统一的是模板与评价方式，不是任务。
+
 ### 单元 9.1 RL baseline
-- **核心必做：** 补齐 MDP、policy、value、advantage、exploration；用现成实现跑通 PPO 或 SAC，重点看训练循环与日志；记录 episode return、成功率、长度变化。
-- **标准出关：** 训练失败时能优先排查奖励、观测、动作范围；有 RL baseline 结果。
-- **弱算力出关：** 选样本效率高的小任务/小网络。
+- **核心必做：** 补齐 MDP、policy、value、advantage、exploration；在 Gymnasium 经典控制环境上用现成实现跑通 PPO 或 SAC（CartPole+PPO / Pendulum+SAC），重点看训练循环与日志；记录 episode return、成功率、长度变化。
+- **标准出关：** 训练失败时能优先排查奖励、观测、动作范围；有 RL baseline 结果；能说清为什么 RL 入门不放在 LIBERO（稀疏奖励）上。
+- **弱算力出关：** 经典控制环境本身 CPU 友好；再缩小网络/训练步数即可。
 - **交付物：** RL baseline 结果。
 
 ### 单元 9.2 奖励设计与方法对照
-- **核心必做：** 对 reward 做 1–2 次有意识修改，比较稳定性与行为差异；记录 reward hacking 与奇怪行为；写 BC vs RL vs Diffusion 综合对比（数据成本、训练难度、探索、鲁棒性）；整理 RL 最小模板。
+- **核心必做：** 在 gym-pusht（dense reward）上训练 RL，并对 reward 做 1–2 次有意识修改，比较稳定性与行为差异；记录 reward hacking 与奇怪行为；写 BC vs RL vs Diffusion 综合对比（数据成本、训练难度、探索、鲁棒性——用同一套结果表格式，任务不同也可对比范式属性）；整理 RL 最小模板。
 - **标准出关：** 能为一个新任务选择合适的学习范式并说明理由。
 - **交付物：** 方法对照报告。
 
@@ -491,9 +496,9 @@
 - **交付物：** VLA 架构对比图 + 选型理由。
 
 ### 单元 13.2 grounding / 微调 ｜ 🔗 Capstone ③·训练
-- **核心必做：** **在单元 11.2 的自采数据集上微调选定的小 VLA**（首选 SmolVLA；备选 OpenVLA + LoRA）（= Capstone 阶段③）；把语言指令映射到目标类别 / 空间关系 / 操作约束；简单场景实现对象选择（颜色 / 类别 / 位置）；记录 grounding 失败类型。
+- **核心必做：** **在单元 11.2 的自采数据集上微调选定的小 VLA**（首选 SmolVLA；OpenVLA + LoRA 仅在单卡显存 ≥27GB 时作为备选——官方口径缩小 batch 后仍约需 27GB，且自定义数据要接 RLDS 或自写 dataset wrapper）（= Capstone 阶段③）；把语言指令映射到目标类别 / 空间关系 / 操作约束；简单场景实现对象选择（颜色 / 类别 / 位置）；记录 grounding 失败类型。
 - **标准出关：** 理解数据流与训练逻辑后主动调整，而非只跑脚本；微调在自采数据上跑通并收敛到可评估的检查点。
-- **弱算力出关：** SmolVLA + LoRA/adapter + 缩小步数；数据条数可少。
+- **弱算力出关：** SmolVLA + LoRA/adapter + 缩小步数；数据条数可少，但按 Capstone 弱算力出关的四件套验收（数据校验 / 单 batch 过拟合 / checkpoint 存取 / 少量 rollout + 失败分类），允许成功率很低。
 - **交付物：** 自采数据上的 VLA 微调实验（含可评估检查点）+ grounding 模块。
 
 ### 单元 13.3 端到端闭环 ｜ 🔗 Capstone ④·测试
@@ -582,7 +587,7 @@
 **篇 2**
 - [ ] 4.1 线代与优化最小包　[ ] 4.2 三维空间与位姿　[ ] 4.3 坐标变换可视化　[ ] 4.4 正运动学 FK
 - [ ] 5.1 反馈与 PID　[ ] 5.2 控制 vs 学习策略
-- [ ] 6.1 ROS 2 工作区与通信　[ ] 6.2 TF/URDF/RViz　[ ] 6.3 MoveIt 2、rosbag 与策略接口
+- [ ] 6.1 ROS 2 工作区与通信　[ ] 6.2 TF/URDF/RViz　[ ] 6.3 rosbag 与策略接口
 - [ ] 🚩 巩固关 2
 
 **篇 3**
@@ -618,7 +623,7 @@
 | 篇 1 代码与深度学习工程 | PyTorch 官方 Tutorials、Dive into Deep Learning、你自己已跑过的微调仓库 |
 | 篇 2 空间、控制与 ROS 工程地基 | Modern Robotics、线代/优化速查资料、经典控制入门材料、ROS 2 Tutorials、MoveIt 2 Quickstart |
 | 篇 3 仿真与模仿学习 | MuJoCo 文档、LeRobot 官方教程、Hugging Face Robotics Course、LIBERO / ManiSkill、Diffusion Policy 项目页 |
-| 篇 4 RL / Sim-to-Real / 数据 | Gymnasium、PPO/SAC 实现、OpenPI（π0）、Open X-Embodiment、DROID、Domain Randomization 综述 |
+| 篇 4 RL / Sim-to-Real / 数据 | Gymnasium（经典控制）、gym-pusht（dense reward 操作环境）、PPO/SAC 实现、OpenPI（π0）、Open X-Embodiment、DROID、Domain Randomization 综述 |
 | 篇 5 感知 / VLA / 收口 | 目标检测与位姿估计教程、VLA Survey、Awesome-VLA、OpenVLA / SmolVLA / OpenPI 项目页 |
 | 附录 A–F | ROS 2 深化资料、Isaac Lab / Genesis 文档、NVIDIA Cosmos 文档、真机低成本臂资料 |
 
